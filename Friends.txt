@@ -1,5 +1,0 @@
-1|1|Andrzej|Golota|35325325|golota@onet.pl|Gdanska 1|
-2|1|Adam|Kownacki|3252522|kownas@onet.pl|Njujork 2|
-3|2|Piotr|Zyla|5352532|zylka@wp.pl|Zakopane 1|
-4|2|Adam|Malysz|34643634|malyszomania@onet.pl|Wisla 2|
-5|1|Dariusz|Michalczewski|2362626|dario@wp.pl|Warszawska 1|

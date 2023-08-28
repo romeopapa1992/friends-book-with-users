@@ -75,7 +75,7 @@ void addUser(vector<User>& userList)
     User newUser;
 
     cout << "Enter a username: ";
-    cin >> newUser.username;
+    newUser.username = readLine();
 
     for (const User& user : userList) 
     {
@@ -87,7 +87,7 @@ void addUser(vector<User>& userList)
     }
 
     cout << "Enter a password: ";
-    cin >> newUser.password;
+    newUser.password = readLine();
 
     newUser.id = userList.size() + 1; 
     userList.push_back(newUser);
@@ -133,7 +133,6 @@ bool loginUser(vector<User>& userList, int& loggedUserId)
 {
     string username, password;
     cout << "Enter username: ";
-    cin.ignore();
     username = readLine();
     cout << "Enter password: ";
     password = readLine();
@@ -189,7 +188,6 @@ void addFriend(vector<Friend>& friendList, int userId)
     Friend newFriend;
 
     cout << "Enter first name: ";
-    cin.ignore();
     newFriend.firstName = readLine();
     cout << "Enter last name: ";
     newFriend.lastName = readLine();
@@ -201,7 +199,6 @@ void addFriend(vector<Friend>& friendList, int userId)
     newFriend.address = readLine();
 
     newFriend.id = friendList.empty() ? 1 : friendList.back().id + 1;
-
     newFriend.userId = userId;
 
     friendList.push_back(newFriend);
@@ -249,13 +246,13 @@ void readFriendData(vector<Friend>& friendList)
     }
 }
 
-void searchByFirstName(const vector<Friend>& friendList, const string& firstName) 
+void searchByFirstName(const vector<Friend>& friendList, const string& firstName, int userId) 
 {
     bool found = false;
 
     for (const Friend& friendObj : friendList) 
     {
-        if (friendObj.firstName == firstName) 
+        if (friendObj.firstName == firstName && friendObj.userId == userId) 
         {
             printFriendDetails(friendObj);
             found = true;
@@ -268,13 +265,13 @@ void searchByFirstName(const vector<Friend>& friendList, const string& firstName
     }
 }
 
-void searchByLastName(const vector<Friend>& friendList, const string& lastName) 
+void searchByLastName(const vector<Friend>& friendList, const string& lastName, int userId) 
 {
     bool found = false;
 
     for (const Friend& friendObj : friendList) 
     {
-        if (friendObj.lastName == lastName) 
+        if (friendObj.lastName == lastName && friendObj.userId == userId) 
         {
             printFriendDetails(friendObj);
             found = true;
@@ -309,7 +306,7 @@ void deleteFriend(vector<Friend>& friendList, int userId)
 {
     int id;
     cout << "Enter the ID of the friend to delete: ";
-    cin >> id;
+    id = stoi(readLine());
 
     auto it = friendList.begin();
     while (it != friendList.end()) 
@@ -317,8 +314,7 @@ void deleteFriend(vector<Friend>& friendList, int userId)
         if (it->id == id && it->userId == userId) 
         {
             cout << "Are you sure you want to delete this friend? (Press 't' to confirm): ";
-            char confirm;
-            cin >> confirm;
+            char confirm = readLine()[0];
 
             if (confirm == 't' || confirm == 'T') 
             {
@@ -346,13 +342,14 @@ void editFriend(vector<Friend>& friendList, int userId)
 {
     int id;
     cout << "Enter the ID of the friend to edit: ";
-    cin >> id;
+    id = stoi(readLine());
     bool found = false;
 
     for (Friend& friendObj : friendList) 
     {
         if (friendObj.id == id && friendObj.userId == userId) 
         {
+            found = true;
             cout << "Select the field to edit:" << endl;
             cout << "1 - First Name" << endl;
             cout << "2 - Last Name" << endl;
@@ -363,7 +360,7 @@ void editFriend(vector<Friend>& friendList, int userId)
             cout << "Choice: ";
 
             int choice;
-            cin >> choice;
+            choice = stoi(readLine());
 
             switch (choice) 
             {
@@ -393,7 +390,6 @@ void editFriend(vector<Friend>& friendList, int userId)
                     cout << "Invalid choice. Please try again." << endl;
                     break;
             }
-            found = true;
             break;
         }
     }
@@ -409,7 +405,13 @@ void changePassword(vector<User>& userList, int userId)
 {
     string newPassword;
     cout << "Enter a new password: ";
-    cin >> newPassword;
+    newPassword = readLine();
+
+    if (newPassword.length() < 8) 
+    {
+        cout << "Password must be at least 8 characters long." << endl;
+        return;
+    }
 
     for (User& user : userList) 
     {
@@ -440,7 +442,7 @@ int main()
         if (loggedUserId == -1) 
         {
             printMainMenu();
-            cin >> choice;
+            choice = stoi(readLine());
 
             switch (choice) 
             {
@@ -468,7 +470,7 @@ int main()
         else 
         {
             printAddressBookMenu();
-            cin >> choice;
+            choice = stoi(readLine());
 
             switch (choice) 
             {
@@ -477,13 +479,11 @@ int main()
                     break;
                 case 2: 
                     cout << "Enter first name to search: ";
-                    cin.ignore(); 
-                    searchByFirstName(friendList, readLine());
+                    searchByFirstName(friendList, readLine(), loggedUserId);
                     break;
                 case 3:
                     cout << "Enter last name to search: ";
-                    cin.ignore(); 
-                    searchByLastName(friendList, readLine());
+                    searchByLastName(friendList, readLine(), loggedUserId);
                     break;
                 case 4:
                     displayAllFriends(friendList, loggedUserId);
@@ -513,4 +513,4 @@ int main()
     }
 
     return 0;
-} 
+}

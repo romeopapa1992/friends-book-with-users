@@ -1,2 +1,0 @@
-1|Andrzej|Andrzej123|
-2|Jarek|Jarek123|
